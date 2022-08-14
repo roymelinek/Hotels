@@ -1,0 +1,2 @@
+# Hotels
+Hotels comparison
