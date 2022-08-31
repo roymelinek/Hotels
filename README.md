@@ -2,6 +2,7 @@
 Hotels comparison
 
 Project's target - comparing hotel prices between hotel reservation websites by city name and date of stay at the hotel.
+
 Project's output - interactive map with the hotels locations, the cheapest price for these dates and from which website it was taken.
 
 Priceline - 
