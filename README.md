@@ -1,7 +1,8 @@
 # Hotels
 Hotels comparison
-The project's target is to comparing hotel prices between hotel reservation sites by city name and length of stay at the hotel.
-The project will show the user an interactive map where the hotel with the location of the hotel, the cheapest price for these dates and from which website it was taken.
+
+Project's target - comparing hotel prices between hotel reservation websites by city name and date of stay at the hotel.
+Project's output - interactive map with the hotels locations, the cheapest price for these dates and from which website it was taken.
 
 Priceline - 
 get_city_id_priceline : the function get city name and RapidAPI key, and return the cityID from Priceline API.
