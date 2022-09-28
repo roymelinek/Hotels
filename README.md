@@ -20,5 +20,11 @@ process_hotels_data - the function get the dataframe from get_hotel_info_priceli
 HotelsClass - create class of Hotel.
 
 comparison - 
+
 union_and_comparison : the function get the hotel dataframes, and union between the process hotel dataframes.
 create_interactive_map : the function get the union df and create an interactive map from the df, the map will save in the HTML_Path.
+
+S3-
+
+upload_file : the function get file path, S3 bucket name and S3 object name.
+the function upload the file from the path to the S3 bucket
