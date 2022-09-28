@@ -6,11 +6,13 @@ Project's target - comparing hotel prices between hotel reservation websites by 
 Project's output - interactive map with the hotels locations, the cheapest price for these dates and from which website it was taken.
 
 Priceline - 
+
 get_city_id_priceline : the function get city name and RapidAPI key, and return the cityID from Priceline API.
 get_hotel_info_priceline : the function get cityID, check-in&out dates, RapidAPI key, and return a dataframe with the information about the available hotels from Priceline API.
 process_priceline_data : the function get the dataframe from get_hotel_info_priceline and process the data.
 
 Hotels.com - 
+
 get_city_id_hotels - the function get city name and RapidAPI key, and return the cityID from Hotels API.
 get_hotel_info_hotels - the function get cityID, check-in&out dates, RapidAPI key, and return a dataframe with the information about the available hotels from Hotels API.
 process_hotels_data - the function get the dataframe from get_hotel_info_priceline and process the data.
