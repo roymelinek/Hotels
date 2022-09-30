@@ -2,30 +2,44 @@ import requests
 import pandas as pd
 import json
 # priceline
-# priceline city id location query
-CityID_url = "https://priceline-com-provider.p.rapidapi.com/v1/hotels/locations"
-HotelInfo_url = "https://priceline-com-provider.p.rapidapi.com/v1/hotels/search"
+CITY_ID_URL = "https://priceline-com-provider.p.rapidapi.com/v1/hotels/locations"
+HOTEL_INFO_URL = "https://priceline-com-provider.p.rapidapi.com/v1/hotels/search"
 
-def get_city_id_priceline(city,RapidAPI_key):
-    querystring = {"name":city,"search_type":"CITY"}
-    headers = {"X-RapidAPI-Key": RapidAPI_key,
+def get_city_id_priceline(city, rapid_api_key):
+    """Return city id of specific city from RapidAPI
+
+    :param city: city name
+    :param rapid_api_key: RapidAPI key
+    :return: city id from RapidAPI
+    """
+
+    querystring = {"name":city, "search_type":"CITY"}
+    headers = {"X-RapidAPI-Key": rapid_api_key,
     "X-RapidAPI-Host": "priceline-com-provider.p.rapidapi.com"}
-    response = requests.request("GET", CityID_url, headers=headers, params=querystring)
+    response = requests.request("GET", CITY_ID_URL, headers=headers, params=querystring)
     response_json = json.loads(response.text)
     priceline_city_id = pd.json_normalize(response_json).cityID[0]
     return priceline_city_id
 
-# priceline hotels info query
-def get_hotel_info_priceline(priceline_city_id, check_in, check_out, RapidAPI_key):
+def get_hotel_info_priceline(priceline_city_id, check_in, check_out, rapid_api_key):
+    """Returns information about the available hotels according to the function parameters
+
+    :param priceline_city_id: city id
+    :param check_in: date for check in
+    :param check_out: date for check out
+    :param rapid_api_key: RapidAPI key
+    :return: dataframe with information about the available hotels
+    """
+
     all_df = pd.DataFrame()
-    headers = {"X-RapidAPI-Key": RapidAPI_key,
+    headers = {"X-RapidAPI-Key": rapid_api_key,
     "X-RapidAPI-Host": "priceline-com-provider.p.rapidapi.com"}
     for i in range(2):
         page_num = str(i)
         querystring = {"sort_order":"STAR","location_id":priceline_city_id,
                        "date_checkout":check_out,"date_checkin":check_in,
                        "rooms_number":"1","page_number":page_num}
-        response = requests.request("GET", HotelInfo_url, headers=headers, params=querystring)
+        response = requests.request("GET", HOTEL_INFO_URL, headers=headers, params=querystring)
         response_json = json.loads(response.text)
         df = pd.json_normalize(response_json)
         df = pd.json_normalize(df["hotels"][0])
