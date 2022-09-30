@@ -1,6 +1,6 @@
 class HotelInfo:
-    def __init__(self, c, CheckIn_date, CheckOut_date):
-        self.city = c
-        self.CheckIn_date = CheckIn_date
-        self.CheckOut_date = CheckOut_date
+    def __init__(self, city, check_in_date, check_out_date):
+        self.city = city
+        self.check_in_date = check_in_date
+        self.check_out_date = check_out_date
 

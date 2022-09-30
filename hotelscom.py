@@ -1,26 +1,39 @@
 import requests
 import pandas as pd
 import json
-
 # hotels.com
-# hotels.com city id location query
-CityID_url = "https://hotels-com-provider.p.rapidapi.com/v1/destinations/search"
-HotelInfo_url = "https://hotels-com-provider.p.rapidapi.com/v1/hotels/search"
+CITY_ID_URL = "https://hotels-com-provider.p.rapidapi.com/v1/destinations/search"
+HOTEL_INFO_URL = "https://hotels-com-provider.p.rapidapi.com/v1/hotels/search"
 
-def get_city_id_hotels(city, RapidAPI_key):
+def get_city_id_hotels(city, rapid_api_key):
+    """Return city id of specific city from RapidAPI
+
+    :param city: city name
+    :param rapid_api_key: RapidAPI key
+    :return: city id from RapidAPI
+    """
+
     querystring = {"query": city, "currency": "USD", "locale": "en_US"}
-    headers = {"X-RapidAPI-Key": RapidAPI_key,
+    headers = {"X-RapidAPI-Key": rapid_api_key,
         "X-RapidAPI-Host": "hotels-com-provider.p.rapidapi.com"}
-    response = requests.request("GET", CityID_url, headers=headers, params=querystring)
+    response = requests.request("GET", CITY_ID_URL, headers=headers, params=querystring)
     response_json = json.loads(response.text)
     hotels_city_id = pd.json_normalize(response_json["suggestions"]).entities[0][0]['destinationId']
     return hotels_city_id
 
 
-# hotels.com hotels info query
-def get_hotel_info_hotels(hotels_city_id, check_in, check_out, RapidAPI_key):
+def get_hotel_info_hotels(hotels_city_id, check_in, check_out, rapid_api_key):
+    """Returns information about the available hotels according to the function parameters
+
+    :param hotels_city_id: city id
+    :param check_in: date for check in
+    :param check_out: date for check out
+    :param rapid_api_key: RapidAPI key
+    :return: dataframe with information about the available hotels
+    """
+
     all_df = pd.DataFrame()
-    headers = {"X-RapidAPI-Key": RapidAPI_key,
+    headers = {"X-RapidAPI-Key": rapid_api_key,
                "X-RapidAPI-Host": "hotels-com-provider.p.rapidapi.com"}
     for i in range(4):
         page_num = str(i + 1)
@@ -30,7 +43,7 @@ def get_hotel_info_hotels(hotels_city_id, check_in, check_out, RapidAPI_key):
                        "adults_number": "1", "locale": "en_US",
                        "currency": "USD", "page_number": page_num}
 
-        response = requests.request("GET", HotelInfo_url, headers=headers, params=querystring)
+        response = requests.request("GET", HOTEL_INFO_URL, headers=headers, params=querystring)
         response_json = json.loads(response.text)
         df = pd.json_normalize(response_json)
         df = pd.json_normalize(df["searchResults.results"][0])
