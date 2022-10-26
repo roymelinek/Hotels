@@ -3,6 +3,7 @@ import boto3
 from botocore.exceptions import ClientError
 import os
 
+
 def upload_file(file_name, bucket, object_name=None):
     """Upload a file to your S3 bucket!
 

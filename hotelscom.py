@@ -5,6 +5,7 @@ import json
 CITY_ID_URL = "https://hotels-com-provider.p.rapidapi.com/v1/destinations/search"
 HOTEL_INFO_URL = "https://hotels-com-provider.p.rapidapi.com/v1/hotels/search"
 
+
 def get_city_id_hotels(city, rapid_api_key):
     """Return city id of specific city from RapidAPI
 
@@ -13,9 +14,13 @@ def get_city_id_hotels(city, rapid_api_key):
     :return: city id from RapidAPI
     """
 
-    querystring = {"query": city, "currency": "USD", "locale": "en_US"}
-    headers = {"X-RapidAPI-Key": rapid_api_key,
-        "X-RapidAPI-Host": "hotels-com-provider.p.rapidapi.com"}
+    querystring = {
+        "query": city, "currency": "USD", "locale": "en_US"
+    }
+    headers = {
+        "X-RapidAPI-Key": rapid_api_key,
+        "X-RapidAPI-Host": "hotels-com-provider.p.rapidapi.com"
+    }
     response = requests.request("GET", CITY_ID_URL, headers=headers, params=querystring)
     response_json = json.loads(response.text)
     hotels_city_id = pd.json_normalize(response_json["suggestions"]).entities[0][0]['destinationId']
@@ -33,23 +38,34 @@ def get_hotel_info_hotels(hotels_city_id, check_in, check_out, rapid_api_key):
     """
 
     all_df = pd.DataFrame()
-    headers = {"X-RapidAPI-Key": rapid_api_key,
-               "X-RapidAPI-Host": "hotels-com-provider.p.rapidapi.com"}
+    headers = {
+        "X-RapidAPI-Key": rapid_api_key,
+        "X-RapidAPI-Host": "hotels-com-provider.p.rapidapi.com"
+    }
     for i in range(4):
         page_num = str(i + 1)
-        querystring = {"checkin_date": check_in, "checkout_date": check_out,
-                       "sort_order": "STAR_RATING_HIGHEST_FIRST",
-                       "destination_id": hotels_city_id,
-                       "adults_number": "1", "locale": "en_US",
-                       "currency": "USD", "page_number": page_num}
+        querystring = {
+            "checkin_date": check_in, "checkout_date": check_out,
+            "sort_order": "STAR_RATING_HIGHEST_FIRST",
+            "destination_id": hotels_city_id,
+            "adults_number": "1", "locale": "en_US",
+            "currency": "USD", "page_number": page_num
+        }
 
         response = requests.request("GET", HOTEL_INFO_URL, headers=headers, params=querystring)
         response_json = json.loads(response.text)
         df = pd.json_normalize(response_json)
-        df = pd.json_normalize(df["searchResults.results"][0])
-        all_df = all_df.append(df)
-        all_df.reset_index(inplace=True, drop=True)
-    hotelscom_hotel_df = all_df[["name", "starRating", "coordinate.lon", "coordinate.lat", 'ratePlan.price.current']]
+        try:
+            df = pd.json_normalize(df["searchResults.results"][0])
+            all_df = all_df.append(df)
+            all_df.reset_index(inplace=True, drop=True)
+        except:
+            pass
+
+    hotelscom_hotel_df = all_df[[
+        "name", "starRating", "coordinate.lon",
+        "coordinate.lat", 'ratePlan.price.current'
+    ]]
     return hotelscom_hotel_df
 
 
@@ -60,6 +76,8 @@ def process_hotels_data(hotelscom_hotel_df):
     hotelscom_hotel_df['Website'] = 'Hotels.com'
     del hotelscom_hotel_df["ratePlan.price.current"]
     return hotelscom_hotel_df
+
+
 def fix_price(row):
     row['price'] = row['ratePlan.price.current']
     row['price'] = row['price'].replace("$", "")
