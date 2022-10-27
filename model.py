@@ -21,5 +21,5 @@ class InputForm(Form):
         label='S3 bucket name:',
         validators=[validators.InputRequired()])
     s3_object_name = StringField(
-        label='s3 object name:',
+        label='S3 object name:',
         validators=[validators.InputRequired()])
