@@ -4,17 +4,13 @@ from comparison import union_and_comparison, create_interactive_map
 from HotelsClass import HotelInfo
 from S3 import upload_file
 
-if __name__ == "__main__":
-    city = input("Input city name")
-    check_in_date = input("Input check in date yyyy-mm-dd")
-    check_out_date = input("Input check out date yyyy-mm-dd")
-    html_path = input("Input your html path to save the map")
-    rapid_api_key = input("Input your RapidAPI key")
-    bucket_name = input("Input your S3 bucket name")
-    s3_object_name = input("Input S3 object name")
+
+def management(
+        city: str, check_in_date: str, check_out_date: str, html_path: str,
+        rapid_api_key: str, bucket_name: str, s3_object_name: str
+):
 
     hotel = HotelInfo(city, check_in_date, check_out_date)
-
     priceline_city_id = get_city_id_priceline(hotel.city, rapid_api_key)
     priceline_hotel_df = get_hotel_info_priceline(
         priceline_city_id, hotel.check_in_date, hotel.check_out_date, rapid_api_key
@@ -29,3 +25,4 @@ if __name__ == "__main__":
 
     assert create_interactive_map(all_hotels_df, html_path)
     assert upload_file(html_path, bucket_name, s3_object_name)
+    return "Done!"

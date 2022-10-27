@@ -59,8 +59,6 @@ def create_interactive_map(all_hotels_df, path):
 
     try:
         m.save(path)
-        print("Map saved in your path")
         return True
     except:
-        print("Got a problem")
         return False
