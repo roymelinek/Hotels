@@ -19,7 +19,6 @@ def upload_file(file_name, bucket, object_name=None):
     s3_client = session.client("s3")
     try:
         s3_client.upload_file(file_name, bucket, object_name)
-        os.remove(file_name)
         return True
     except ClientError as e:
         logging.error(e)
