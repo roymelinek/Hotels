@@ -8,6 +8,12 @@
   {% for field in form %}
     <tr>
     <td>{{ field.label}}</td><td>{{ field }}</td>
+      {% if field.errors %}
+      <td><ul class=errors>
+      {% for error in field.errors %}
+        <li> color="red">{{ error }}</font></li>
+      {% endfor %}</ul></td>
+    {% endif %}
     </tr>
   {% endfor %}
 </table>
