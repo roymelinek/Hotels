@@ -1,44 +1,38 @@
-import requests
 import pandas as pd
-import json
-# priceline
-CITY_ID_URL = "https://priceline-com-provider.p.rapidapi.com/v1/hotels/locations"
-HOTEL_INFO_URL = "https://priceline-com-provider.p.rapidapi.com/v1/hotels/search"
 
 
-def get_city_id_priceline(city, rapid_api_key):
+def get_city_id_priceline(city, priceline):
     """Return city id of specific city from RapidAPI
 
     :param city: city name
-    :param rapid_api_key: RapidAPI key
+    :param priceline: Priceline RapidAPI object
     :return: city id from RapidAPI
     """
 
     querystring = {"name": city, "search_type": "CITY"}
     headers = {
-        "X-RapidAPI-Key": rapid_api_key,
-        "X-RapidAPI-Host": "priceline-com-provider.p.rapidapi.com"
+        "X-RapidAPI-Key": priceline.key,
+        "X-RapidAPI-Host": priceline.host
     }
-    response = requests.request("GET", CITY_ID_URL, headers=headers, params=querystring)
-    response_json = json.loads(response.text)
+    response_json = priceline.city_id(priceline.city_id_url, headers, querystring)
     priceline_city_id = pd.json_normalize(response_json).cityID[0]
     return priceline_city_id
 
 
-def get_hotel_info_priceline(priceline_city_id, check_in, check_out, rapid_api_key):
+def get_hotel_info_priceline(priceline_city_id, check_in, check_out, priceline):
     """Returns information about the available hotels according to the function parameters
 
     :param priceline_city_id: city id
     :param check_in: date for check in
     :param check_out: date for check out
-    :param rapid_api_key: RapidAPI key
+    :param priceline: Priceline RapidAPI object
     :return: dataframe with information about the available hotels
     """
 
     all_df = pd.DataFrame()
     headers = {
-        "X-RapidAPI-Key": rapid_api_key,
-        "X-RapidAPI-Host": "priceline-com-provider.p.rapidapi.com"
+        "X-RapidAPI-Key": priceline.key,
+        "X-RapidAPI-Host": priceline.host
     }
     for i in range(2):
         page_num = str(i)
@@ -47,8 +41,7 @@ def get_hotel_info_priceline(priceline_city_id, check_in, check_out, rapid_api_k
             "date_checkout": check_out, "date_checkin": check_in,
             "rooms_number": "1", "page_number": page_num
         }
-        response = requests.request("GET", HOTEL_INFO_URL, headers=headers, params=querystring)
-        response_json = json.loads(response.text)
+        response_json = priceline.hotel_info(priceline.hotel_info_url, headers, querystring)
         df = pd.json_normalize(response_json)
         try:
             df = pd.json_normalize(df["hotels"][0])
