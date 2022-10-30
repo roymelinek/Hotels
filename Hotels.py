@@ -24,5 +24,6 @@ def management(
     all_hotels_df = union_and_comparison(process_hotelscom_hotel_df, process_priceline_hotel_df)
 
     assert create_interactive_map(all_hotels_df, html_path)
-    assert upload_file(html_path, bucket_name, s3_object_name)
+    if bucket_name != "No AWS, else- change" and s3_object_name != "No AWS, else- change":
+        assert upload_file(html_path, bucket_name, s3_object_name)
     return "Done!"

@@ -67,7 +67,6 @@ def get_hotel_info_priceline(priceline_city_id, check_in, check_out, rapid_api_k
     return priceline_hotel_df
 
 
-# priceline processing data
 def process_priceline_data(priceline_hotel_df):
     priceline_hotel_df['price'] = None
     priceline_hotel_df = priceline_hotel_df.apply(lambda row: correct_price(row), axis=1)

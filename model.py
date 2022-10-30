@@ -18,8 +18,8 @@ class InputForm(Form):
         label='Rapid API Key:',
         validators=[validators.InputRequired()])
     bucket_name = StringField(
-        label='S3 bucket name:',
+        label='S3 bucket name:', default="No AWS, else- change",
         validators=[validators.InputRequired()])
     s3_object_name = StringField(
-        label='S3 object name:',
+        label='S3 object name:', default="No AWS, else- change",
         validators=[validators.InputRequired()])
