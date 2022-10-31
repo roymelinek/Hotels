@@ -28,3 +28,10 @@ create_interactive_map : the function get the union df and create an interactive
 ###### S3-
 upload_file : the function get file path, S3 bucket name and S3 object name. <br />
 the function upload the file from the path to the S3 bucket
+
+##### RapidAPI- 
+class of RapidAPI
+
+##### app- 
+Building a web application using Flask to represent the project in a way that will be accessible to the client.
+
